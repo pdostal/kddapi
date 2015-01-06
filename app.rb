@@ -11,5 +11,5 @@ helpers do
 end
 
 get '/' do
-  erb '{"welcome":"Hello World!"}'
+  erb :index
 end
