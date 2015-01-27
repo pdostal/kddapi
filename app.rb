@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'httpclient'
+require 'nokogiri'
 
 configure do
   set server: 'thin'
@@ -38,7 +39,9 @@ get '/' do
     'base-search[string]' => params[:q]
   }
   res = clnt.get(uri, query)
-  @body = res.inspect
+
+  doc = Nokogiri::HTML res.content
+  @itms = doc.xpath('//h4/a')
 
   erb :index
 end
