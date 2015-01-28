@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'httpclient'
 require 'nokogiri'
+require 'json'
 
 configure do
   set server: 'thin'
@@ -41,7 +42,14 @@ get '/' do
   res = clnt.get(uri, query)
 
   doc = Nokogiri::HTML res.content
-  @itms = doc.xpath('//h4/a')
+  itms = doc.xpath('//h4/a')
 
-  erb :index
+  content_type :json
+  json = Array.new
+  itms.each do |itm|
+    name = itm.text
+    id = itm['href'].sub(/\?page=doc-detail&id=/, '')
+    json << { book: { name: name, id: id } }
+  end
+  json.to_json
 end
