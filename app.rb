@@ -49,7 +49,8 @@ get '/' do
   itms.each do |itm|
     name = itm.text
     id = itm['href'].sub(/\?page=doc-detail&id=/, '')
-    json << { book: { name: name, id: id } }
+    url = "http://kdd.cz/file.php?id=#{id}"
+    json << { book: { name: name, id: id, url: url } }
   end
   json.to_json
 end
