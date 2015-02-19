@@ -42,15 +42,15 @@ get '/' do
   res = clnt.get(uri, query)
 
   doc = Nokogiri::HTML res.content
-  itms = doc.xpath('//h4/a')
+  itms = doc.css('td')
 
   content_type :json
   json = Array.new
-  itms.each do |itm|
-    name = itm.text
-    id = itm['href'].sub(/\?page=doc-detail&id=/, '')
+  for i in 0..(itms.count/14)-1
+    name = itms[i*14].text
+    id = itms[i*14].css('a')[0]['href'].sub(/\?page=doc-detail&id=/, '')
     url = "http://kdd.cz/file.php?id=#{id}"
-    json << { book: { name: name, id: id, url: url } }
+    json << { book: { name: name, id: id, url: url, author: author } }
   end
   json.to_json
 end
