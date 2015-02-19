@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'httpclient'
 require 'nokogiri'
+require 'sanitize'
 require 'json'
 
 configure do
@@ -50,7 +51,16 @@ get '/' do
     name = itms[i*14].text
     id = itms[i*14].css('a')[0]['href'].sub(/\?page=doc-detail&id=/, '')
     url = "http://kdd.cz/file.php?id=#{id}"
-    json << { book: { name: name, id: id, url: url, author: author } }
+    author = Sanitize.clean itms[(i*14)+3].text.strip
+    description = Sanitize.clean itms[(i*14)+4].text.strip
+    subject = Sanitize.clean itms[(i*14)+7].text.strip
+    publisher = Sanitize.clean itms[(i*14)+8].text.strip
+    year = Sanitize.clean itms[(i*14)+9].text.strip
+    type = Sanitize.clean itms[(i*14)+10].text.strip
+    state = Sanitize.clean itms[(i*14)+11].text.strip
+    json << { book: { name: name, id: id, url: url,
+    author: author, description: description, subject: subject,
+    publisher: publisher, year: year, type: type, state: state } }
   end
   json.to_json
 end
