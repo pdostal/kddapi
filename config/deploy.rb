@@ -5,6 +5,11 @@ set :scm, :git
 set :format, :pretty
 set :log_level, :info
 
+set :keep_releases, 3
+
+# set :linked_files, %w{}
+set :linked_dirs,  %w{log tmp/pids tmp/sockets}
+
 set :rbenv_type, :user
 set :rbenv_ruby, File.read('.ruby-version').strip
 
