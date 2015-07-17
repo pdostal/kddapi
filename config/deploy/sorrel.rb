@@ -1,9 +1,7 @@
 role :app, %w{www@sorrel.pdostal.cz}
-role :web, %w{www@sorrel.pdostal.cz}
-role :db,  %w{www@sorrel.pdostal.cz}
 
 set :stage, 'sorrel'
-set :branch, "master"
+set :branch, ENV["REVISION"] || "master"
 set :tmp_dir, "/home/www/tmp"
 set :deploy_to, '/home/www/kddapi.pdostal.cz'
 

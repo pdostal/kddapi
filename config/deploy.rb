@@ -1,18 +1,16 @@
-set :stages, %w(sorrel)
-set :default_stage, 'sorrel'
-
 set :scm, :git
 set :format, :pretty
 set :log_level, :info
 
 set :keep_releases, 3
 
-# set :linked_files, %w{}
+set :linked_files, %w{}
 set :linked_dirs,  %w{log tmp/pids tmp/sockets}
 
 set :rbenv_type, :user
 set :rbenv_ruby, File.read('.ruby-version').strip
 
+set :application,     'kddapi'
 set :puma_threads,    [4, 16]
 set :puma_workers,    0
 
@@ -59,9 +57,10 @@ namespace :deploy do
 
   desc 'Display server uptime'
   after :restart, :uptime do
-    on roles(:web), in: :groups do
+    on roles(:app), in: :groups do
       uptime = capture(:uptime)
       "#{host.hostname} reports: #{uptime}"
     end
   end
+
 end
