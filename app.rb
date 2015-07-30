@@ -6,6 +6,8 @@ get '/' do
 end
 
 get '/search_all' do
+  @books = Array.new
+  
   # clnt = HTTPClient.new
   #
   # uri = 'http://kdd.cz/'
@@ -36,7 +38,6 @@ get '/search_all' do
   # doc = Nokogiri::HTML res.content
   # itms = doc.css('td')
 
-  @books = Array.new
   # for i in 0..(itms.count/14)-1
   #   name = itms[i*14].text
   #   id = itms[i*14].css('a')[0]['href'].sub(/\?page=doc-detail&id=/, '')
