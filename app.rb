@@ -1,16 +1,3 @@
-require 'rubygems'
-require 'sinatra'
-require 'httpclient'
-require 'nokogiri'
-require 'sanitize'
-require 'json'
-
-configure do
-  set server: 'thin'
-  set port: 3000
-  set port: '0.0.0.0'
-end
-
 helpers do
 end
 
