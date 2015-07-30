@@ -4,6 +4,7 @@ gem 'httpclient'
 gem 'nokogiri'
 gem 'sanitize'
 gem 'json'
+gem 'builder'
 
 gem 'puma'
 group :development do
