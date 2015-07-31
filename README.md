@@ -6,8 +6,12 @@
 GET '/search'
 - user
 - pass
+- kind
 - query
 
 ```
-/search?user=XXX&pass=XXX&query=XXX
+/search?user=XXX&kind=XXX&pass=XXX&query=XXX
 ```
+
+- kind = { nazev | autor | nakladatelstvi | anotace | vse }
+- kind = { nazev_preklad | klicova slova | autor neprimy | isbn }

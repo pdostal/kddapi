@@ -28,7 +28,7 @@ get '/search' do
   query = {
     'page' => 'search',
     'akce' => 'Search',
-    'base-search[column]' => 'vse',
+    'base-search[column]' => params[:kind],
     'base-search[language]' => 'all',
     'base-search[count-per-page]' => '99',
     'base-search[string]' => params[:query]
