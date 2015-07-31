@@ -1,10 +1,13 @@
 # KDD API
+- Send HTTP request
+- Get XML output
 
-Searching & Browsing in [KDD](http://kdd.cz/)
-- Simply send HTTP REST API request
-- Get JSON data output or .txt book
+## Searching
+GET '/search'
+- user
+- pass
+- query
 
-
-# LICENSE
-MIT License (c) 2015 Pavel Dostál
-
+```
+/search?user=XXX&pass=XXX&query=XXX
+```

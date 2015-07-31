@@ -5,15 +5,15 @@ get '/' do
   erb :index
 end
 
-get '/search_all' do
+get '/search' do
   @books = Array.new
 
   clnt = HTTPClient.new
 
   uri = 'http://kdd.cz/'
   query = {
-    'login[username]' => params[:u],
-    'login[password]' => params[:p]
+    'login[username]' => params[:user],
+    'login[password]' => params[:pass]
   }
   res = clnt.post(uri, query)
 
@@ -31,7 +31,7 @@ get '/search_all' do
     'base-search[column]' => 'vse',
     'base-search[language]' => 'all',
     'base-search[count-per-page]' => '99',
-    'base-search[string]' => params[:q]
+    'base-search[string]' => params[:query]
   }
   res = clnt.get(uri, query)
 
@@ -54,5 +54,5 @@ get '/search_all' do
     publisher: publisher, year: year, type: type, state: state }
   end
 
-  builder :search_all
+  builder :search
 end
