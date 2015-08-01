@@ -9,7 +9,10 @@ get '/search' do
   @books = Array.new
 
   clnt = HTTPClient.new
+  # clnt.debug_dev = STDOUT
   clnt.set_cookie_store 'cookie.dat'
+
+  _now = Time.now.to_f
 
   uri = 'http://kdd.cz/'
   query = {
@@ -39,6 +42,9 @@ get '/search' do
 
   doc = Nokogiri::HTML res.content
   itms = doc.css('td')
+
+  _end = Time.now.to_f
+  @duration = _end - _now
 
   for i in 0..(itms.count/14)-1
     name = itms[i*14].text
