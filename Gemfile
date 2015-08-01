@@ -6,8 +6,8 @@ gem 'sanitize'
 gem 'json'
 gem 'builder'
 
-gem 'puma'
 group :development do
+  gem 'thin'
   gem 'capistrano', '~> 3.1', require: false
   gem 'capistrano-rbenv', '~> 2.0', require: false
   gem 'capistrano-bundler', '~> 1.1.2', require: false

@@ -14,20 +14,25 @@ get '/search' do
 
   _now = Time.now.to_f
 
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
   uri = 'http://kdd.cz/'
   query = {
     'login[username]' => params[:user],
     'login[password]' => params[:pass]
   }
   res = clnt.post(uri, query)
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End POST /"
 
-  uri = 'http://kdd.cz/index.php'
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=user"
+  uri = 'http://kdd.cz/'
   query = {
     'page' => 'user',
     'lang' => 'en'
   }
   res = clnt.get(uri, query)
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=user"
 
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=search"
   uri = 'http://kdd.cz/index.php'
   query = {
     'page' => 'search',
@@ -39,7 +44,9 @@ get '/search' do
   }
   res = clnt.get(uri, query)
   clnt.save_cookie_store
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=search"
 
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Parsing"
   doc = Nokogiri::HTML res.content
   itms = doc.css('td')
 
@@ -61,6 +68,7 @@ get '/search' do
     author: author, description: description, subject: subject,
     publisher: publisher, year: year, type: type, state: state }
   end
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :search
 end
