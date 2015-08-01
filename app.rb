@@ -9,6 +9,7 @@ get '/search' do
   @books = Array.new
 
   clnt = HTTPClient.new
+  clnt.set_cookie_store 'cookie.dat'
 
   uri = 'http://kdd.cz/'
   query = {
@@ -34,6 +35,7 @@ get '/search' do
     'base-search[string]' => params[:query]
   }
   res = clnt.get(uri, query)
+  clnt.save_cookie_store
 
   doc = Nokogiri::HTML res.content
   itms = doc.css('td')
