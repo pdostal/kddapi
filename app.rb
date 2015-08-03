@@ -1,18 +1,28 @@
 helpers do
 end
 
+clnt = HTTPClient.new
+# clnt.debug_dev = STDOUT
+clnt.set_cookie_store 'cookie.dat'
+
 get '/' do
   erb :index
+end
+
+get '/login' do
+  @user = Array.new
+
+  duration_now = Time.now.to_f
+  duration_end = Time.now.to_f
+  @duration = duration_end - duration_now
+
+  builder :login
 end
 
 get '/search' do
   @books = Array.new
 
-  clnt = HTTPClient.new
-  # clnt.debug_dev = STDOUT
-  clnt.set_cookie_store 'cookie.dat'
-
-  _now = Time.now.to_f
+  duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
   uri = 'http://kdd.cz/'
@@ -43,15 +53,14 @@ get '/search' do
     'base-search[string]' => params[:query]
   }
   res = clnt.get(uri, query)
-  clnt.save_cookie_store
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=search"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsing"
   doc = Nokogiri::HTML res.content
   itms = doc.css('td')
 
-  _end = Time.now.to_f
-  @duration = _end - _now
+  duration_end = Time.now.to_f
+  @duration = duration_end - duration_now
 
   for i in 0..(itms.count/14)-1
     name = itms[i*14].text
@@ -72,3 +81,5 @@ get '/search' do
 
   builder :search
 end
+
+clnt.save_cookie_store
