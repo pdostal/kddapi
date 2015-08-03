@@ -13,8 +13,48 @@ get '/login' do
   @user = Array.new
 
   duration_now = Time.now.to_f
+
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
+  uri = 'http://kdd.cz/'
+  query = {
+    'login[username]' => params[:user],
+    'login[password]' => params[:pass]
+  }
+  res = clnt.post(uri, query)
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End POST /"
+
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=user"
+  uri = 'http://kdd.cz/'
+  query = {
+    'page' => 'user',
+    'lang' => 'en'
+  }
+  res = clnt.get(uri, query)
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=user"
+
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Parsing"
+  doc = Nokogiri::HTML res.content
+  itms = doc.css('li')
+
   duration_end = Time.now.to_f
   @duration = duration_end - duration_now
+
+  for i in 0..(itms.count)-1
+    if itms[i].text.strip =~ /Logged: /
+      name = itms[i].text.strip.gsub(/Logged: (.+)/, '\1')
+    end
+    if itms[i].text.strip =~ /Account status: /
+      status = itms[i].text.strip.gsub(/Account status: ([0-9]+) Credits/, '\1')
+    end
+    if itms[i].text.strip =~ /Your last login date: /
+      lastLog = itms[i].text.strip.gsub(/Your last login date: ([0-9]+)/, '\1')
+    end
+    if itms[i].text.strip =~ /Your benefit account status: /
+      benefit = itms[i].text.strip.gsub(/Your benefit account status: ([0-9]+) Credits/, '\1')
+    end
+  end
+  @user = { name: name, status: status, lastLog: lastLog, benefit: benefit }
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :login
 end
