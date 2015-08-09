@@ -8,7 +8,11 @@ xml.kdd do
       xml.name book[:name]
       xml.id book[:id]
       xml.url = book[:url]
-      xml.author = book[:author]
+      book[:authors].each do |author|
+        if !Sanitize.clean(author).strip.empty?
+          xml.author = Sanitize.clean(author).strip
+        end
+      end
       xml.description = book[:description]
       xml.subject = book[:subject]
       xml.publisher = book[:publisher]
