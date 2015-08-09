@@ -65,6 +65,7 @@ get '/download' do
     'login[password]' => params[:pass]
   }
   res = clnt.post(uri, query)
+  puts res.cookies
   puts Time.new().strftime("%H:%M:%S:%L")+" => End POST /"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=user"
@@ -74,16 +75,19 @@ get '/download' do
     'lang' => 'en'
   }
   res = clnt.get(uri, query)
+  puts res.cookies
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=user"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?file=12345"
-  uri = "http://kdd.cz/file.php?id=#{params[:id]}"
-  res = clnt.get(uri)
+  uri = "http://kdd.cz/file.php"
+  query = {
+    'id' => params[:id]
+  }
+  res = clnt.get(uri, query)
 
   name = File.join '/home/vagrant/www/kddapi/tmp', params[:id]+'.zip'
   file = File.new name, 'w+'
   file.write res.content
-  puts res.content
   file.close
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?file=12345"
