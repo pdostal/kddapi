@@ -2,8 +2,6 @@ helpers do
 end
 
 clnt = HTTPClient.new
-# clnt.debug_dev = STDOUT
-clnt.set_cookie_store 'cookie.dat'
 
 get '/' do
   erb :index
@@ -121,5 +119,3 @@ get '/search' do
 
   builder :search
 end
-
-clnt.save_cookie_store
