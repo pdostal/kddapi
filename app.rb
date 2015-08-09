@@ -1,7 +1,5 @@
-helpers do
-end
-
 clnt = HTTPClient.new
+# clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
 
 get '/' do
   erb :index
@@ -55,6 +53,45 @@ get '/login' do
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :login
+end
+
+get '/download' do
+  duration_now = Time.now.to_f
+
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
+  uri = 'http://kdd.cz/'
+  query = {
+    'login[username]' => params[:user],
+    'login[password]' => params[:pass]
+  }
+  res = clnt.post(uri, query)
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End POST /"
+
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=user"
+  uri = 'http://kdd.cz/'
+  query = {
+    'page' => 'user',
+    'lang' => 'en'
+  }
+  res = clnt.get(uri, query)
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=user"
+
+  puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?file=12345"
+  uri = "http://kdd.cz/file.php?id=#{params[:id]}"
+  res = clnt.get(uri)
+
+  name = File.join '/home/vagrant/www/kddapi/tmp', params[:id]+'.zip'
+  file = File.new name, 'w+'
+  file.write res.content
+  puts res.content
+  file.close
+
+  puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?file=12345"
+
+  send_file name, disposition: 'attachment', filename: File.basename(name)
+
+  duration_end = Time.now.to_f
+  @duration = duration_end - duration_now
 end
 
 get '/search' do
@@ -119,3 +156,5 @@ get '/search' do
 
   builder :search
 end
+
+# clnt.save_cookie_store
