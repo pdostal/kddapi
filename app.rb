@@ -92,7 +92,7 @@ get '/download' do
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?file=12345"
 
-  send_file name, disposition: 'attachment', filename: File.basename(name)
+  # send_file name, disposition: 'attachment', filename: File.basename(name)
 
   duration_end = Time.now.to_f
   @duration = duration_end - duration_now

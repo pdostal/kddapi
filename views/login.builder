@@ -6,6 +6,6 @@ xml.kdd do
     xml.name @user[:name]
     xml.status @user[:status]
     xml.lastLog = @user[:lastLog]
-    xml.benefit = @user[:benefit]
+    xml.bonus = @user[:benefit]
   end
 end
