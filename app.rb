@@ -1,11 +1,10 @@
-clnt = HTTPClient.new
-# clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
-
 get '/' do
   erb :index
 end
 
 get '/login' do
+  clnt = HTTPClient.new
+  # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
   @user = Array.new
 
   duration_now = Time.now.to_f
@@ -53,9 +52,13 @@ get '/login' do
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :login
+
+  # clnt.save_cookie_store
 end
 
 get '/download' do
+  clnt = HTTPClient.new
+  # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
@@ -96,9 +99,13 @@ get '/download' do
 
   duration_end = Time.now.to_f
   @duration = duration_end - duration_now
+
+  # clnt.save_cookie_store
 end
 
 get '/search' do
+  clnt = HTTPClient.new
+  # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
   @books = Array.new
 
   duration_now = Time.now.to_f
@@ -159,6 +166,6 @@ get '/search' do
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :search
-end
 
-# clnt.save_cookie_store
+  # clnt.save_cookie_store
+end
