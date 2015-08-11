@@ -4,13 +4,15 @@ end
 
 get '/login' do
   clnt = HTTPClient.new
+  # clnt.debug_dev = STDOUT
   # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
+
   @user = Array.new
 
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
-  uri = 'http://kdd.cz/'
+  uri = 'http://kdd.cz/index.php'
   query = {
     'login[username]' => params[:user],
     'login[password]' => params[:pass]
@@ -59,6 +61,7 @@ end
 get '/download' do
   clnt = HTTPClient.new
   # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
+
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
@@ -88,8 +91,8 @@ get '/download' do
   }
   res = clnt.get(uri, query)
 
-  name = File.join '/home/vagrant/www/kddapi/tmp', params[:id]+'.zip'
-  file = File.new name, 'w+'
+  name = File.join "/home/vagrant/www/kddapi/tmp/#{params[:id]}.zip"
+  file = File.new name, 'w'
   file.write res.content
   file.close
 
@@ -106,6 +109,7 @@ end
 get '/search' do
   clnt = HTTPClient.new
   # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
+
   @books = Array.new
 
   duration_now = Time.now.to_f
