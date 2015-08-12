@@ -1,5 +1,4 @@
 Typhoeus::Config.verbose = true
-Typhoeus::Config.block_connection = true
 
 get '/' do
   erb :index
@@ -8,7 +7,7 @@ end
 get '/login' do
   @user = Array.new
 
-  cookiefile = "/home/vagrant/www/kddapi/tmp/cookie_#{params[:user]}.dat"
+  cookiefile = "tmp/cookie_#{params[:user]}.dat"
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
@@ -65,7 +64,7 @@ get '/login' do
 end
 
 get '/download' do
-  cookiefile = "/home/vagrant/www/kddapi/tmp/cookie_#{params[:user]}.dat"
+  cookiefile = "tmp/cookie_#{params[:user]}.dat"
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
@@ -105,7 +104,7 @@ get '/download' do
     }
   ).run
 
-  name = File.join "/home/vagrant/www/kddapi/tmp/#{params[:id]}.zip"
+  name = File.join "tmp/#{params[:id]}.zip"
   file = File.new name, 'w'
   file.write res.body
   file.close
@@ -121,7 +120,7 @@ end
 get '/search' do
   @books = Array.new
 
-  cookiefile = "/home/vagrant/www/kddapi/tmp/cookie_#{params[:user]}.dat"
+  cookiefile = "tmp/cookie_#{params[:user]}.dat"
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
