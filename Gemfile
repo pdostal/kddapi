@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 gem 'sinatra'
-gem 'http-cookie'
-gem 'httpclient'
+gem 'typhoeus'
 gem 'nokogiri'
 gem 'sanitize'
 gem 'json'

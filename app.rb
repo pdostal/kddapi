@@ -1,36 +1,44 @@
+Typhoeus::Config.verbose = true
+Typhoeus::Config.block_connection = true
+
 get '/' do
   erb :index
 end
 
 get '/login' do
-  clnt = HTTPClient.new
-  # clnt.debug_dev = STDOUT
-  # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
-
   @user = Array.new
 
+  cookiefile = "/home/vagrant/www/kddapi/tmp/cookie_#{params[:user]}.dat"
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
-  uri = 'http://kdd.cz/index.php'
-  query = {
-    'login[username]' => params[:user],
-    'login[password]' => params[:pass]
-  }
-  res = clnt.post(uri, query)
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/index.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :post,
+    params: {
+      'login[username]': params[:user],
+      'login[password]': params[:pass]
+    }
+  ).run
   puts Time.new().strftime("%H:%M:%S:%L")+" => End POST /"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=user"
-  uri = 'http://kdd.cz/'
-  query = {
-    'page' => 'user',
-    'lang' => 'en'
-  }
-  res = clnt.get(uri, query)
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/index.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :get,
+    params: {
+      'page': 'user',
+      'lang': 'en'
+    }
+  ).run
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=user"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsing"
-  doc = Nokogiri::HTML res.content
+  doc = Nokogiri::HTML res.body
   itms = doc.css('li')
 
   duration_end = Time.now.to_f
@@ -54,99 +62,113 @@ get '/login' do
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :login
-
-  # clnt.save_cookie_store
 end
 
 get '/download' do
-  clnt = HTTPClient.new
-  # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
-
+  cookiefile = "/home/vagrant/www/kddapi/tmp/cookie_#{params[:user]}.dat"
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
-  uri = 'http://kdd.cz/'
-  query = {
-    'login[username]' => params[:user],
-    'login[password]' => params[:pass]
-  }
-  res = clnt.post(uri, query)
-  puts res.cookies
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/index.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :post,
+    params: {
+      'login[username]': params[:user],
+      'login[password]': params[:pass]
+    }
+  ).run
   puts Time.new().strftime("%H:%M:%S:%L")+" => End POST /"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=user"
-  uri = 'http://kdd.cz/'
-  query = {
-    'page' => 'user',
-    'lang' => 'en'
-  }
-  res = clnt.get(uri, query)
-  puts res.cookies
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/index.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :get,
+    params: {
+      'page': 'user',
+      'lang': 'en'
+    }
+  ).run
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=user"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?file=12345"
-  uri = "http://kdd.cz/file.php"
-  query = {
-    'id' => params[:id]
-  }
-  res = clnt.get(uri, query)
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/file.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :get,
+    params: {
+      'id': params[:id]
+    }
+  ).run
 
   name = File.join "/home/vagrant/www/kddapi/tmp/#{params[:id]}.zip"
   file = File.new name, 'w'
-  file.write res.content
+  file.write res.body
   file.close
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?file=12345"
 
-  # send_file name, disposition: 'attachment', filename: File.basename(name)
+  send_file name, disposition: 'attachment', filename: File.basename(name)
 
   duration_end = Time.now.to_f
   @duration = duration_end - duration_now
-
-  # clnt.save_cookie_store
 end
 
 get '/search' do
-  clnt = HTTPClient.new
-  # clnt.set_cookie_store '/home/vagrant/www/kddapi/tmp/cookies.dat'
-
   @books = Array.new
 
+  cookiefile = "/home/vagrant/www/kddapi/tmp/cookie_#{params[:user]}.dat"
   duration_now = Time.now.to_f
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run POST /"
-  uri = 'http://kdd.cz/'
-  query = {
-    'login[username]' => params[:user],
-    'login[password]' => params[:pass]
-  }
-  res = clnt.post(uri, query)
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/index.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :post,
+    params: {
+      'login[username]': params[:user],
+      'login[password]': params[:pass]
+    }
+  ).run
   puts Time.new().strftime("%H:%M:%S:%L")+" => End POST /"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=user"
-  uri = 'http://kdd.cz/'
-  query = {
-    'page' => 'user',
-    'lang' => 'en'
-  }
-  res = clnt.get(uri, query)
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/index.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :get,
+    params: {
+      'page': 'user',
+      'lang': 'en'
+    }
+  ).run
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=user"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Run GET /?page=search"
-  uri = 'http://kdd.cz/index.php'
-  query = {
-    'page' => 'search',
-    'akce' => 'Search',
-    'base-search[column]' => params[:kind],
-    'base-search[language]' => 'all',
-    'base-search[count-per-page]' => '99',
-    'base-search[string]' => params[:query]
-  }
-  res = clnt.get(uri, query)
+  res = Typhoeus::Request.new(
+    'http://kdd.cz/index.php',
+    cookiefile: cookiefile,
+    cookiejar: cookiefile,
+    method: :get,
+    params: {
+      'page': 'search',
+      'akce': 'Search',
+      'base-search[column]': params[:kind],
+      'base-search[language]': 'all',
+      'base-search[count-per-page]': '99',
+      'base-search[string]': params[:query]
+    }
+  ).run
   puts Time.new().strftime("%H:%M:%S:%L")+" => End GET /?page=search"
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsing"
-  doc = Nokogiri::HTML res.content
+  doc = Nokogiri::HTML res.body
   itms = doc.css('td')
 
   duration_end = Time.now.to_f
@@ -170,6 +192,4 @@ get '/search' do
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :search
-
-  # clnt.save_cookie_store
 end
