@@ -1,6 +1,6 @@
 xml.instruct! :xml, :version => '1.0'
 xml.kdd do
-  xml.state 'Success'
+  xml.result 'Success'
   xml.duration @duration
   xml.user do
     xml.name @user[:name]
