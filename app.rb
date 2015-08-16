@@ -40,9 +40,6 @@ get '/login' do
   doc = Nokogiri::HTML res.body
   itms = doc.css('li')
 
-  duration_end = Time.now.to_f
-  @duration = duration_end - duration_now
-
   for i in 0..(itms.count)-1
     if itms[i].text.strip =~ /Logged: /
       name = itms[i].text.strip.gsub(/Logged: (.+)/, '\1')
@@ -60,7 +57,10 @@ get '/login' do
   @user = { name: name, status: status, lastLog: lastLog, benefit: benefit }
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
-  builder :login
+  duration_end = Time.now.to_f
+  @duration = duration_end - duration_now
+
+   builder :login
 end
 
 get '/download' do
@@ -172,9 +172,6 @@ get '/search' do
   info =  doc.css('p')
   itms = doc.css('td')
 
-  duration_end = Time.now.to_f
-  @duration = duration_end - duration_now
-
   for i in 0..(info.count)-1
     string = Sanitize.clean info[i].text.split.join(' ')
     if string =~ /Total number of found results/
@@ -211,6 +208,10 @@ get '/search' do
     authors: author, description: description, subject: subject,
     publisher: publisher, year: year, type: type, state: state }
   end
+  
+  duration_end = Time.now.to_f
+  @duration = duration_end - duration_now
+
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsed"
 
   builder :search
