@@ -1,7 +1,8 @@
 xml.instruct! :xml, :version => '1.0'
 xml.kdd do
   xml.result 'Success'
-  xml.count @books.count
+  xml.count @count
+  xml.shown @shown
   xml.duration @duration
   @books.each do |book|
     xml.book do

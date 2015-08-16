@@ -168,10 +168,27 @@ get '/search' do
 
   puts Time.new().strftime("%H:%M:%S:%L")+" => Parsing"
   doc = Nokogiri::HTML res.body
+  info =  doc.css('p')
   itms = doc.css('td')
 
   duration_end = Time.now.to_f
   @duration = duration_end - duration_now
+
+  for i in 0..(info.count)-1
+    string = Sanitize.clean info[i].text.split.join(' ')
+    if string =~ /Total number of found results/
+      @count = string.gsub(/.*Total number of found results ([0-9]*).*/, '\1').to_i
+    end
+  end
+  if !@count.is_a? Numeric
+    @count = 0
+  end
+
+  if @count <= 99
+    @shown = @count
+  else
+    @shown = 99
+  end
 
   for i in 0..(itms.count/14)-1
     name = itms[i*14].text
