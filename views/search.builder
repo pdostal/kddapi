@@ -3,6 +3,8 @@ xml.kdd do
   xml.result 'Success'
   xml.count @count
   xml.shown @shown
+  xml.page @page
+  xml.pages @pages
   xml.duration @duration
   @books.each do |book|
     xml.book do

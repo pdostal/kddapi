@@ -158,6 +158,7 @@ get '/search' do
     params: {
       'page': 'search',
       'akce': 'Search',
+      'paging': params[:page],
       'base-search[column]': params[:kind],
       'base-search[language]': 'all',
       'base-search[count-per-page]': '99',
@@ -184,8 +185,13 @@ get '/search' do
     @count = 0
   end
 
+  @page = params[:page].to_i
+  @pages = (@count.to_f/99.to_f).ceil.to_i
+
   if @count <= 99
     @shown = @count
+  elsif @page == @pages
+    @shown = @count - ( @page - 1 ) * 99
   else
     @shown = 99
   end
